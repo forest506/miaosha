@@ -1,29 +1,40 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.viewobject.UserVO;
+import com.example.demo.error.BusinessException;
+import com.example.demo.error.EnumBusinessError;
 import com.example.demo.response.CommonReturnType;
 import com.example.demo.service.UserService;
 import com.example.demo.service.model.UserModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller("user")
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends BaseController{
 
     @Autowired
     private UserService userService;
 
     @RequestMapping("/get")
     @ResponseBody
-    public CommonReturnType getUser(@RequestParam(name = "id") Integer id) {
+    public CommonReturnType getUser(@RequestParam(name = "id") Integer id) throws BusinessException {
         //调用service服务获取对应id的用户对象，返回
         UserModel userModel = userService.getUserById(id);
-        UserVO userVO =  convertFromModel(userModel);
+
+        if (userModel == null) {
+            throw new BusinessException(EnumBusinessError.USER_NOT_EXIST);
+        }
+
+        UserVO userVO = convertFromModel(userModel);
         return CommonReturnType.create(userVO);
     }
 
@@ -36,5 +47,7 @@ public class UserController {
             return userVO;
         }
     }
+
+
 
 }
