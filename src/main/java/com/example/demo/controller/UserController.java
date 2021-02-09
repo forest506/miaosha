@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.controller.viewobject.UserVO;
 import com.example.demo.service.UserService;
 import com.example.demo.service.model.UserModel;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,16 +19,20 @@ public class UserController {
 
     @RequestMapping("/get")
     @ResponseBody
-    public UserModel getUser(@RequestParam(name = "id") Integer id) {
+    public UserVO getUser(@RequestParam(name = "id") Integer id) {
         //调用service服务获取对应id的用户对象，返回
+        UserModel userModel = userService.getUserById(id);
+        return convertFromModel(userModel);
+    }
 
-        try {
-            UserModel userModel = userService.getUserById(id);
-            return userModel;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+    private UserVO convertFromModel(UserModel userModel) {
+        if (userModel == null) {
+            return null;
+        } else {
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(userModel, userVO);
+            return userVO;
         }
-        return null;
     }
 
 }
