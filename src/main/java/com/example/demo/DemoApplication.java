@@ -14,22 +14,27 @@ import org.springframework.web.bind.annotation.RestController;
 @MapperScan("com.example.demo.dao")
 public class DemoApplication {
 
-	@Autowired
-	private UserDOMapper userDOMapper;
+    @Autowired
+    private UserDOMapper userDOMapper;
 
-	@RequestMapping("/")
-	public String home(){
-		UserDO ud =  userDOMapper.selectByPrimaryKey(1);
-		if(ud == null){
-					return "user not exist";
-		}else{
-			return ud.getName();
-		}
-	}
+    @RequestMapping("/")
+    public String home() {
+//		UserDO ud =  userDOMapper.selectByPrimaryKey(1);
+//		if(ud == null){
+//					return "user not exist";
+//		}else{
+//			return ud.getName();
+//		}
 
-	public static void main(String[] args) {
-		System.out.println("Helloworld");
-		SpringApplication.run(DemoApplication.class, args);
-	}
+        UserDO ud = userDOMapper.selectByPrimaryKey(1);
+        Integer i = 0;
+        i++;
+        return "";
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Helloworld");
+        SpringApplication.run(DemoApplication.class, args);
+    }
 
 }
